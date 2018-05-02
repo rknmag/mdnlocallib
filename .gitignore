@@ -1,0 +1,12 @@
+#All backup files
+*~
+*.exe
+*.swp
+*.bak
+*.tmp
+
+# All Log files
+logs/
+*.log
+npm-debug.log*
+node_modules/
