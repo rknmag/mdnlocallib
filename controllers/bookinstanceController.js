@@ -21,7 +21,7 @@ exports.bookinstance_list = function(req,res,next) {
 exports.bookinstance_detail = function(req,res,next) {
  // res.send('Not Implemented: bookinstance Detail');
   var id=mongoose.Types.ObjectId(req.params.id);
-  BookInstance.findById(id).exec(function(err,bookinstance){
+  BookInstance.findById(id).populate('book').exec(function(err,bookinstance){
     if (err) { return next(err); }
     if (bookinstance == null) {
       var err = new Error('Book copy not found')

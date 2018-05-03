@@ -30,24 +30,24 @@ AuthorSchema.virtual('lifespan').get(function(){
   }
   lifetime_string += ' - ';
   if (this.date_of_death) {
-    //lifetime_string += moment(this.data_of_death).format('MMMM Do, YYYY');
-    lifetime_string += this.date_of_death;
+    lifetime_string += moment(this.data_of_death).format('MMMM Do, YYYY');
   }
   return lifetime_string;
 });
 
-AuthorSchema.virtual('data_of_birth_yyyy_mm_dd').get(function(){
+
+AuthorSchema.virtual('date_of_birth_yyyy_mm_dd').get(function(){
   
   if (this.date_of_birth) {
     return moment(this.date_of_birth).format('YYYY-MM-DD')
   };
   return '';
 });
-AuthorSchema.virtual('data_of_death_yyyy_mm_dd').get(function(){
-  if (this.data_of_death) {
+AuthorSchema.virtual('date_of_death_yyyy_mm_dd').get(function(){
+  if (this.date_of_death) {
     return moment(this.date_of_death).format('YYYY-MM-DD');
   };
-  return ' ';
+  return '';
 });
 
 module.exports = mongoose.model('Author',AuthorSchema);

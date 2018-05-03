@@ -215,6 +215,7 @@ exports.book_update_post= function(req,res) {
   res.send('Not Implemented: book update post');
 };
 */
+
 exports.book_update_post= [
 
   // Convert the genre to an array
@@ -232,7 +233,7 @@ exports.book_update_post= [
   body('title','Title must not be empty').isLength({min:1}).trim(),
   body('author','Author must not be empty').isLength({min:1}).trim(),
   body('summary','Summary must not be empty').isLength({min:1}).trim(),
-  body('isibn','ISBN must not be empty').isLength({min:1}).trim(),
+  body('isbn','ISBN must not be empty').isLength({min:1}).trim(),
 
   // Sanitize fields
   sanitizeBody('title').trim().escape(),
