@@ -50,11 +50,7 @@ exports.author_create_get = function(req,res) {
   res.render('author_form', { title: 'Create Author'});
 };
 
-/*
-exports.author_create_post = function(req,res) {
-  res.send('Not Implemented: Author Create Post');
-};
-*/
+
 // Note : This is array of 9 entries ( each entry is a function )
 exports.author_create_post = [
 
@@ -131,7 +127,7 @@ exports.author_delete_get = function(req,res,next) {
   });
 };
 
-exports.author_delete_post = function(req,res) {
+exports.author_delete_post = function(req,res,next) {
   // res.send('Not Implemented: Author delete post');
   async.parallel({
     author: function(callback) {

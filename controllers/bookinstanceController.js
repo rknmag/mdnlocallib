@@ -45,11 +45,7 @@ exports.bookinstance_create_get = function(req,res,next) {
     });
   });
 };
-/*
-exports.bookinstance_create_post = function(req,res) {
-  res.send('Not Implemented: bookinstance Create Post');
-};
-*/
+
 exports.bookinstance_create_post = [
 
   // Validate fileds
@@ -97,15 +93,35 @@ exports.bookinstance_create_post = [
     }
   }
 ];
-exports.bookinstance_delete_get = function(req,res) {
-  res.send('Not Implemented: bookinstance delete get');
+
+exports.bookinstance_delete_get = function(req,res,next) {
+  // res.send('Not Implemented: bookinstance delete get');
+  var id=mongoose.Types.ObjectId(req.params.id);
+  BookInstance.findById(id).populate('book').exec(function(err,bookinstance){
+    if (err) { return next(err); }
+    if (bookinstance.book == null) {
+      res.redirect('/catalog/bookinstances');
+    }
+    res.render('bookinstance_delete',{
+      title: 'Delete BookInstance',
+      bookinstance: bookinstance
+    });
+  });
 };
-exports.bookinstance_delete_post = function(req,res) {
-  res.send('Not Implemented: bookinstance delete post');
+
+exports.bookinstance_delete_post = function(req,res,next) {
+  // res.send('Not Implemented: bookinstance delete post');
+  var id=mongoose.Types.ObjectId(req.params.id);
+  BookInstance.findByIdAndRemove(id, function(err){
+    if (err) { return next(err); }
+    res.redirect('/catalog/bookinstances');
+  });
 };
+
 exports.bookinstance_update_get = function(req,res) {
   res.send('Not Implemented: bookinstance update get');
 };
+
 exports.bookinstance_update_post= function(req,res) {
   res.send('Not Implemented: bookinstance update post');
 };

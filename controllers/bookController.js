@@ -21,7 +21,6 @@ exports.index=function(req,res) {
     autor_count: function(callback) { Author.count(callback); },
     genre_count: function(callback) { Genre.count(callback); },
   }, function(err,results) {
-      console.log('in index results: ',results);
       res.render('index', {
         title: 'Local Library Home',
         error: err,
@@ -85,12 +84,6 @@ exports.book_create_get = function(req,res,next) {
     });
   });
 };
-
-/*
-exports.book_create_post = function(req,res) {
-  res.send('Not Implemented: book Create Post');
-};
-*/
 
 /* Note : This is array of multiple functions */
 exports.book_create_post = [
@@ -170,11 +163,46 @@ exports.book_create_post = [
 ];
 
 exports.book_delete_get = function(req,res,next) {
-  res.send('Not Implemented: book delete get');
+  // res.send('Not Implemented: book delete get');
+  async.parallel ({
+    book: function(callback) { Book.findById(req.params.id).exec(callback);},
+    bookinstances: function(callback) {
+      BookInstance.find({'book':req.params.id}).exec(callback);}
+  },function(err,results){
+    if (err) { return next(err); }
+    if (results.book==null) {
+      res.redirect('/catalog/books');
+    }
+    res.render('book_delete', {
+      title: 'Book Delete',
+      book: results.book,
+      bookinstances:results.bookinstances
+    });
+  });
+
 };
 
 exports.book_delete_post = function(req,res,next) {
-  res.send('Not Implemented: book delete post');
+  // res.send('Not Implemented: book delete post');
+  async.parallel ({
+    book: function(callback) { Book.findById(req.params.id).exec(callback);},
+    bookinstances: function(callback) {
+      BookInstance.find({'book':req.params.id}).exec(callback);}
+  },function(err,results){
+      if (err) { return next(err); }
+      if (results.bookinstances.length>0){
+        // Book Instances exist
+        res.render('book_delete',{
+        });
+        return;
+      }
+      else {
+        Book.findByIdAndRemove(req.body.bookid,function(err){
+          if (err) { return next(err); }
+          res.redirect('/catalog/books');
+        });
+      }
+  });
 };
 
 exports.book_update_get = function(req,res,next) {
@@ -209,12 +237,6 @@ exports.book_update_get = function(req,res,next) {
       });
   });
 };
-
-/*
-exports.book_update_post= function(req,res) {
-  res.send('Not Implemented: book update post');
-};
-*/
 
 exports.book_update_post= [
 
