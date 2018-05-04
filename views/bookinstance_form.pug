@@ -12,7 +12,7 @@ block content
         for book in book_list
           if bookinstance
             option(value=book._id 
-                selected=(bookinstance.book.toString()==book._id.toString() ? 'selected' : false)) #{book.title}
+              selected=(bookinstance.book._id.toString()==book._id.toString()) ? 'selected' : false) #{book.title}
           else
             option(value=book._id) #{book.title}
     .form-group
@@ -24,16 +24,17 @@ block content
     .form-group
       label(for='due_back') Date when book available:
       input#due_back.form-control(type='date' name='due_back'
-          value=(undefined===bookinstance ? '' : bookinstance.due_back))
+          value=(undefined===bookinstance ? '' : bookinstance.due_back_yyyy_mm_dd))
     .form-group
+      -statusList=['Maintenance','Available','Loaned','Reserved']
       label(for='status') Status:
       select#status.form-control(type='select' 
           placeholder='Select status' name='status' required='true')
-        option(value='Maintenance') Maintenance
-        option(value='Available') Available
-        option(value='Loaned') Loaned
-        option(value='Reserved') Reserved
-
+        for st in statusList
+          if bookinstance
+            option(value=st selected=(bookinstance.status==st) ? 'selected' : false) #{st}
+          else  
+            option(value=st) #{st}
     button.btn.btn-primary(type='submit') Submit
 
   if errors 

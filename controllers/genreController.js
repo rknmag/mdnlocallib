@@ -19,7 +19,6 @@ exports.genre_list = function(req,res,next) {
 };
 
 exports.genre_detail = function(req,res,next) {
-  // res.send('Not Implemented: genre Detail');
   var id=mongoose.Types.ObjectId(req.params.id);
   async.parallel({
     genre:function(callback) {
@@ -49,13 +48,11 @@ exports.genre_detail = function(req,res,next) {
 };
 
 exports.genre_create_get = function(req,res,next) {
-  //res.send('Not Implemented: genre Create Get');
   res.render('genre_form',{title: 'Create Genre'}); 
 };
 
 // Note: If defines array of middleware functions ( 3 of them ) 
 exports.genre_create_post = [ 
-  // res.send('Not Implemented: genre Create Post');
 
   // Validate that the name field is not emtpy
   body('name', 'Genre name required').isLength({min:1}).trim(),
@@ -94,7 +91,6 @@ exports.genre_create_post = [
 ];
 
 exports.genre_delete_get = function(req,res,next) {
-  // res.send('Not Implemented: genre delete get');
   async.parallel({
     genre: function(callback){
       Genre.findById(req.params.id).exec(callback);
@@ -116,7 +112,6 @@ exports.genre_delete_get = function(req,res,next) {
 };
 
 exports.genre_delete_post = function(req,res,next) {
-  // res.send('Not Implemented: genre delete post');
   async.parallel({
     genre: function(callback) {
       Genre.findById(req.body.genreid).exec(callback);
@@ -144,11 +139,54 @@ exports.genre_delete_post = function(req,res,next) {
    });
 };
 
-exports.genre_update_get = function(req,res) {
-  res.send('Not Implemented: genre update get');
+exports.genre_update_get = function(req,res,next) {
+  //res.send('Not Implemented: genre update get');
+  Genre.findById(req.params.id,function(err,genre){
+    if (err) { return next(err); }
+    if (!genre) {
+      let err=new Error('Genre not found');
+      err.status=404;
+      return next(err);
+    }
+    res.render('genre_form',{
+      title:'Update_Genre',
+      genre: genre
+    });
+  });
+
 };
 
-exports.genre_update_post= function(req,res) {
-  res.send('Not Implemented: genre update post');
-};
 
+exports.genre_update_post= [
+  // Validate that the name field is not emtpy
+  body('name', 'Genre name required').isLength({min:1}).trim(),
+
+  // Sanitize the name field
+  sanitizeBody('name').trim().escape(),
+
+  // process request
+  (req,res,next) => {
+    // Extract the validation errors from a request
+    const errors = validationResult(req);
+
+
+    if (!errors.isEmpty()){
+      res.render('genre_form',{
+        title:'Update Genre',
+        genre: req.body,
+        errors: errors.array()
+      });
+    }
+    else {
+      // Create a genre object with escaped and trimmed data
+      var genre = new Genre({
+        name: req.body.name,
+        _id: req.params.id
+      });
+      Genre.findByIdAndUpdate(req.params.id,genre,{},function(err,thegenre){
+        if (err) { return next(err); }
+        res.redirect(thegenre.url);
+      });
+    }
+  },
+];

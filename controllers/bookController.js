@@ -30,7 +30,6 @@ exports.index=function(req,res) {
 };
 
 exports.book_list = function(req,res,next) {
-  // res.send('Not Implemented: book List');
   Book.find({ },'title author').populate('author').
     exec(function(err,list_books){
       if (err) { return next(err); }
@@ -39,7 +38,6 @@ exports.book_list = function(req,res,next) {
 };
 
 exports.book_detail = function(req,res,next) {
-  // res.send('Not Implemented: book Detail');
   var id=mongoose.Types.ObjectId(req.params.id);
   async.parallel({
     book: function(callback) {
@@ -67,7 +65,6 @@ exports.book_detail = function(req,res,next) {
 };
 
 exports.book_create_get = function(req,res,next) {
-  //res.send('Not Implemented: book Create Get');
   async.parallel({
     authors: function(callback) {
       Author.find(callback);
@@ -163,7 +160,6 @@ exports.book_create_post = [
 ];
 
 exports.book_delete_get = function(req,res,next) {
-  // res.send('Not Implemented: book delete get');
   async.parallel ({
     book: function(callback) { Book.findById(req.params.id).exec(callback);},
     bookinstances: function(callback) {
@@ -183,7 +179,6 @@ exports.book_delete_get = function(req,res,next) {
 };
 
 exports.book_delete_post = function(req,res,next) {
-  // res.send('Not Implemented: book delete post');
   async.parallel ({
     book: function(callback) { Book.findById(req.params.id).exec(callback);},
     bookinstances: function(callback) {
@@ -206,7 +201,6 @@ exports.book_delete_post = function(req,res,next) {
 };
 
 exports.book_update_get = function(req,res,next) {
-  //res.send('Not Implemented: book update get');
   async.parallel({
     book: function(callback) {
       Book.findById(req.params.id).populate('author').
