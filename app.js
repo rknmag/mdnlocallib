@@ -8,7 +8,8 @@ var logger = require('morgan');
 var mongoose = require('mongoose');
 // If we want to connect to different server , with DB username and password
 // 'mongodb://cooluser:coolpassword@ds119748.mlab.com:19748/local_library'
-var mongoDB = "mongodb://localhost/mdnlocallib";
+//var mongoDB = "mongodb://localhost/mdnlocallib";
+var mongoDB = process.env.MONGODB_URI || "mongodb://localhost/mdnlocallib";
 
 var index = require('./routes/index');
 var users = require('./routes/users');
