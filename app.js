@@ -5,11 +5,14 @@ var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
+var compress = require('compression');
+var helmet = require('helmet');
 var mongoose = require('mongoose');
 // If we want to connect to different server , with DB username and password
 // 'mongodb://cooluser:coolpassword@ds119748.mlab.com:19748/local_library'
 //var mongoDB = "mongodb://localhost/mdnlocallib";
 var mongoDB = process.env.MONGODB_URI || "mongodb://localhost/mdnlocallib";
+
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -34,6 +37,10 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+app.use(compress());
+app.use(helmet());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
